@@ -18,11 +18,14 @@ public class Upload {
     private String rootDir;
     private String fileRecorderDir = "recorder" + File.separator;
     private String product;
+    private String prefix;
 
-    public Upload(String rootDir, String product) {
+
+    public Upload(String rootDir, String product, String prefix) {
         this.rootDir = rootDir;
         this.rootDir = this.rootDir.replace("/", File.separator);
         this.product = product;
+        this.prefix = prefix;
     }
 
     public static final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
@@ -37,7 +40,12 @@ public class Upload {
             final String subDirectory = directory + dir;
             File subFile = new File(subDirectory);
             if (subFile.isFile()) {
-                final String path = subDirectory.substring(rootDir.length());
+                final String path;
+                if (prefix.equals("null")) {
+                    path = subDirectory.substring(rootDir.length());
+                } else {
+                    path = prefix + subDirectory.substring(rootDir.length());
+                }
                 fixedThreadPool.execute(new Runnable() {
                     public void run() {
                         qiniuUp(subDirectory, path, product);

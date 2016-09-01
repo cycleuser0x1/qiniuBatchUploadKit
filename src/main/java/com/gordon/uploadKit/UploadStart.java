@@ -24,6 +24,9 @@ public class UploadStart {
         }
         System.out.println(path);
 
+        System.out.print(PropertiesUtil.getValue("msg.path.prefix"));
+        String prefix = scanner.next();
+
         System.out.print(PropertiesUtil.getValue("msg.bucket.name"));
         String product = scanner.next();
 
@@ -55,7 +58,7 @@ public class UploadStart {
             return;
         } else if (cmd.equals("Y")) {
             new QiniuAuth(accessKey, secretKey);
-            Upload upload = new Upload(path, product);
+            Upload upload = new Upload(path, product, prefix);
             path = path.replace("/", File.separator);
             upload.up(path);
             upload.fixedThreadPool.shutdown();
